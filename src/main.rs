@@ -3,13 +3,12 @@ fn main() -> std::io::Result<()> {
 
     let mut reader = my_reader::BufReader::open("res/cpfs.txt")?;
 
-    let cpf_num = [0i32; 11];
     let mut validos = 0;
     let mut invalidos = 0;
 
     let mut buffer = String::new();
     while let Some(line) = reader.read_line(&mut buffer) {
-        if valida_cpf(cpf_num, line?) {
+        if valida_cpf_str(line?) {
             validos += 1;
         } else {
             invalidos += 1;
@@ -19,17 +18,20 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn valida_cpf(mut cpf_num: [i32; 11], cpfs_reg: &str) -> bool {
+fn valida_cpf_str(cpfs_reg: &str) -> bool {
+    let mut cpf_num = [0i32; 11];
     let mut i = 0;
     for c in cpfs_reg.chars() {
         if let Some(d) = c.to_digit(10) {
             cpf_num[i] = d as i32;
             i += 1;
         }
-    }
+    };
+    valida_cpf(&cpf_num)
+}
 
-    let (d1, d2) = calcula_digitos(cpf_num);
-
+fn valida_cpf(cpf_num: &[i32; 11]) -> bool {
+    let (d1, d2) = calcula_digitos(&cpf_num);
     if cpf_num[9] != d1 {
         print!("primeiro inválido {}\n", d1);
         false
@@ -41,7 +43,7 @@ fn valida_cpf(mut cpf_num: [i32; 11], cpfs_reg: &str) -> bool {
     }
 }
 
-fn calcula_digitos(cpf_num: [i32; 11]) -> (i32, i32) {
+fn calcula_digitos(cpf_num: &[i32; 11]) -> (i32, i32) {
     let mut summ = 0;
     for i in 0..9 {
         summ += cpf_num[i] * (10 - i as i32)
