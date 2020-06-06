@@ -7,8 +7,9 @@ fn main() -> std::io::Result<()> {
     let mut invalidos = 0;
 
     let mut buffer = String::new();
+    let mut cpf_num = [0i32; 11];
     while let Some(line) = reader.read_line(&mut buffer) {
-        if valida_cpf_str(line?) {
+        if valida_cpf_str(line?, &mut cpf_num) {
             validos += 1;
         } else {
             invalidos += 1;
@@ -18,8 +19,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn valida_cpf_str(cpfs_reg: &str) -> bool {
-    let mut cpf_num = [0i32; 11];
+fn valida_cpf_str(cpfs_reg: &str, cpf_num: &mut[i32; 11]) -> bool {
     let mut i = 0;
     for c in cpfs_reg.chars() {
         if let Some(d) = c.to_digit(10) {
