@@ -1,3 +1,9 @@
+#[cfg(not(target_env = "msvc"))]
+use jemallocator::Jemalloc;
+#[cfg(not(target_env = "msvc"))]
+#[global_allocator]
+static GLOBAL: Jemalloc = Jemalloc;
+
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -27,6 +33,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
+#[inline]
 fn valida_cpf_str(cpfs_reg: &str, cpf_buffer: &mut [u32; 11]) -> bool {
     let mut i = 0;
     for c in cpfs_reg.chars() {
@@ -47,6 +54,7 @@ fn valida_cpf_str(cpfs_reg: &str, cpf_buffer: &mut [u32; 11]) -> bool {
     }
 }
 
+#[inline]
 fn calcula_digitos(cpf_buffer: &[u32; 11]) -> (u32, u32) {
     let mut sum = 0;
     for i in 0..9 {
